@@ -26,7 +26,7 @@
     "corporate_function_name": null
   },
   {
-    "jobseeker_id": "000b8ea8-e2d3-4b92-ac55-e77c8ff0a14e", 
+    "jobseeker_id": "000b8ea8-e2d3-4b92-ac55-e77c8ff0a14e",
     "corporate_function_id": 10,
     "ral_id": 1,
     "background_id": 12,
@@ -58,7 +58,7 @@
     "background_id": 4,
     "experience_id": 5,
     "province_id": 59,
-    "email": "anna.bianchi@email.com", 
+    "email": "anna.bianchi@email.com",
     "first_name": "Anna",
     "last_name": "Bianchi",
     "job_title": null,
