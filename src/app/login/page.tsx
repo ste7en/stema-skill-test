@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useEmailVerification } from '@/hooks/useEmailVerification'
 import { useOtpVerification } from '@/hooks/useOtpVerification'
+import { useAuthStore } from '@/store/useAuthStore'
 
 export default function LoginPage() {
   const router = useRouter()
+  const login = useAuthStore((state) => state.login)
   const [isVerifying, setIsVerifying] = useState(false)
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
@@ -39,7 +41,7 @@ export default function LoginPage() {
     e.preventDefault()
     const user = await verifyOtp(email, otp)
     if (user) {
-      // Here we could store the user in global state
+      login(user)
       router.push('/dashboard')
     }
   }
