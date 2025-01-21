@@ -21,9 +21,17 @@ export async function POST(request: Request) {
     // In a real app, we would verify the OTP here
     // For this demo, we'll accept any OTP and return the user
     
-    return NextResponse.json({
-      user: jobseeker
+    const response = NextResponse.json({ user: jobseeker })
+
+    // Set the user-id cookie
+    response.cookies.set('user-id', jobseeker.jobseeker_id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
     })
+
+    return response
   } catch (error) {
     return NextResponse.json(
       { error: 'Invalid request' },
