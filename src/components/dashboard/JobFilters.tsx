@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useFilters } from '@/hooks/useFilters'
 import { useAuthStore } from '@/store/useAuthStore'
 import { JobFilters as JobFiltersType } from '@/types'
@@ -18,12 +17,12 @@ import { format } from 'date-fns'
 
 interface JobFiltersProps {
   onFiltersChange: (filters: JobFiltersType) => void
+  filters: JobFiltersType
 }
 
-export function JobFilters({ onFiltersChange }: JobFiltersProps) {
+export function JobFilters({ onFiltersChange, filters }: JobFiltersProps) {
   const { data: filterOptions } = useFilters()
   const { user } = useAuthStore()
-  const [filters, setFilters] = useState<JobFiltersType>({})
 
   const handleFilterChange = (update: Partial<JobFiltersType>) => {
     const newFilters = { ...filters, ...update }
@@ -32,12 +31,10 @@ export function JobFilters({ onFiltersChange }: JobFiltersProps) {
       newFilters.minMatchScore = undefined
       newFilters.cluster = undefined
     }
-    setFilters(newFilters)
     onFiltersChange(newFilters)
   }
 
   const handleReset = () => {
-    setFilters({})
     onFiltersChange({})
   }
 

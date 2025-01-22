@@ -3,20 +3,17 @@
 import { useState } from 'react'
 import { useJobs } from '@/hooks/useJobs'
 import { JobCard } from './JobCard'
-import { JobFilters } from './JobFilters'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { JobFilters as JobFiltersType } from '@/types'
 
-export function JobList() {
-  const [page, setPage] = useState(1)
-  const [filters, setFilters] = useState<JobFiltersType>({})
-  const { data, isLoading, isFetching, isError, error } = useJobs({ page, filters })
+interface JobListProps {
+  filters: JobFiltersType
+}
 
-  const handleFiltersChange = (newFilters: JobFiltersType) => {
-    setFilters(newFilters)
-    setPage(1) // Reset to first page when filters change
-  }
+export function JobList({ filters }: JobListProps) {
+  const [page, setPage] = useState(1)
+  const { data, isLoading, isFetching, isError, error } = useJobs({ page, filters })
 
   if (isLoading) {
     return (
@@ -68,9 +65,6 @@ export function JobList() {
 
   return (
     <div className="space-y-6">
-      {/* Filters */}
-      <JobFilters onFiltersChange={handleFiltersChange} />
-
       {/* Loading overlay */}
       {isFetching && (
         <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
