@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from "next";
 import "./globals.css";
+import { QueryClientProvider } from '@/providers/QueryClientProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased min-h-screen bg-gradient-to-b from-purple-50/50 to-purple-100/50`}>
-        {children}
+        <QueryClientProvider>
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   )
