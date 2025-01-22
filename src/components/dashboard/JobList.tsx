@@ -5,14 +5,11 @@ import { useJobs } from '@/hooks/useJobs'
 import { JobCard } from './JobCard'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { JobFilters as JobFiltersType } from '@/types'
+import { useJobFilteringSearchParams } from '@/hooks/useJobFilteringSearchParams'
 
-interface JobListProps {
-  filters: JobFiltersType
-}
-
-export function JobList({ filters }: JobListProps) {
+export function JobList() {
   const [page, setPage] = useState(1)
+  const { filters } = useJobFilteringSearchParams()
   const { data, isLoading, isFetching, isError, error } = useJobs({ page, filters })
 
   if (isLoading) {

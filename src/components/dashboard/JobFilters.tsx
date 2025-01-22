@@ -14,15 +14,12 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarIcon, ResetIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
+import { useJobFilteringSearchParams } from '@/hooks/useJobFilteringSearchParams'
 
-interface JobFiltersProps {
-  onFiltersChange: (filters: JobFiltersType) => void
-  filters: JobFiltersType
-}
-
-export function JobFilters({ onFiltersChange, filters }: JobFiltersProps) {
+export function JobFilters() {
   const { data: filterOptions } = useFilters()
   const { user } = useAuthStore()
+  const { filters, onFiltersChange } = useJobFilteringSearchParams()
 
   const handleFilterChange = (update: Partial<JobFiltersType>) => {
     const newFilters = { ...filters, ...update }
