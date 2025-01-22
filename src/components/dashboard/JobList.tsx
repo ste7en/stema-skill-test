@@ -1,16 +1,28 @@
 'use client'
 
-import { useState } from 'react'
 import { useJobs } from '@/hooks/useJobs'
 import { JobCard } from './JobCard'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useJobFilteringSearchParams } from '@/hooks/useJobFilteringSearchParams'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useCallback } from 'react'
 
 export function JobList() {
-  const [page, setPage] = useState(1)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const { filters } = useJobFilteringSearchParams()
+
+  const pageParam = searchParams.get('page')
+  const page = pageParam ? Number(pageParam) : 1
+  
   const { data, isLoading, isFetching, isError, error } = useJobs({ page, filters })
+
+  const setPage = useCallback((newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('page', String(newPage))
+    router.push(`/dashboard?${params.toString()}`)
+  }, [searchParams, router])
 
   if (isLoading) {
     return (
