@@ -11,6 +11,10 @@ export default function DashboardPage() {
         <div className="col-span-12 lg:col-span-4">
           <UserProfile />
         </div>
+        {/* Jobs Section */}
+        <div className="col-span-12 lg:col-span-8">
+          <JobList />
+        </div>
       </div>
     </div>
   )
