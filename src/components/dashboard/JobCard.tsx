@@ -1,9 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { JobWithMatch } from '@/types'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/store/useAuthStore'
+import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 
 interface JobCardProps {
   job: JobWithMatch
@@ -11,6 +13,7 @@ interface JobCardProps {
 
 export function JobCard({ job }: JobCardProps) {
   const { user } = useAuthStore()
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <Card>
@@ -39,9 +42,30 @@ export function JobCard({ job }: JobCardProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="prose prose-sm max-w-none" 
-            dangerouslySetInnerHTML={{ __html: job.content_html }} 
-          />
+          <div>
+            <div 
+              className={`prose prose-sm max-w-none ${!isExpanded ? "line-clamp-4" : ""}`}
+              dangerouslySetInnerHTML={{ __html: job.content_html }} 
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="mt-2 h-8 px-2"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? (
+                <>
+                  <ChevronUpIcon className="mr-2 h-4 w-4" />
+                  Show Less
+                </>
+              ) : (
+                <>
+                  <ChevronDownIcon className="mr-2 h-4 w-4" />
+                  Show More
+                </>
+              )}
+            </Button>
+          </div>
           {user && job.match && (
             <div className="grid grid-cols-2 gap-4 pt-4 border-t">
               <div>
