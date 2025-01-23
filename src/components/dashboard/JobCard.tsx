@@ -71,25 +71,25 @@ export function JobCard({ job }: JobCardProps) {
               <div>
                 <p className="text-sm font-medium">Experience Match</p>
                 <p className="text-sm text-muted-foreground">
-                  {Math.round(job.match.experience_score)}%
+                  {Math.round(job.match.experience_score * 100)}%
                 </p>
               </div>
               <div>
                 <p className="text-sm font-medium">Location Match</p>
                 <p className="text-sm text-muted-foreground">
-                  {Math.round(job.match.location_score)}%
+                  {Math.round(job.match.location_score * 100)}%
                 </p>
               </div>
               <div>
                 <p className="text-sm font-medium">Background Match</p>
                 <p className="text-sm text-muted-foreground">
-                  {Math.round(job.match.background_score)}%
+                  {Math.round(job.match.background_score * 100)}%
                 </p>
               </div>
               <div>
                 <p className="text-sm font-medium">Role Match</p>
                 <p className="text-sm text-muted-foreground">
-                  {Math.round(job.match.role_score)}%
+                  {Math.round(job.match.role_score * 100)}%
                 </p>
               </div>
             </div>
