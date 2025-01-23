@@ -16,7 +16,7 @@ import { CalendarIcon, ResetIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { useJobFilteringSearchParams } from '@/hooks/useJobFilteringSearchParams'
 import { useDebounce } from 'use-debounce'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export function JobFilters() {
   const { data: filterOptions } = useFilters()
@@ -34,16 +34,27 @@ export function JobFilters() {
   const [debouncedSearch] = useDebounce(searchQuery, 300)
   const [debouncedMatchScore] = useDebounce(minMatchScore, 300)
 
+
+  const handleFilterChange = useCallback((update: Partial<JobFiltersType>) => {
+    const newFilters = { ...filters, ...update }
+    // If matchProfile is disabled, clear match-related filters
+    if (update.hasOwnProperty('matchProfile') && !update.matchProfile) {
+      newFilters.minMatchScore = undefined
+      newFilters.cluster = undefined
+    }
+    onFiltersChange(newFilters)
+  }, [filters, onFiltersChange])
+  
   // Update filters when debounced values change
   useEffect(() => {
     handleFilterChange({ searchQuery: debouncedSearch || undefined })
-  }, [debouncedSearch])
+  }, [debouncedSearch, handleFilterChange])
 
   useEffect(() => {
     if (filters.matchProfile) {
       handleFilterChange({ minMatchScore: debouncedMatchScore })
     }
-  }, [debouncedMatchScore])
+  }, [debouncedMatchScore, handleFilterChange])
 
   // Update local state when filters change externally
   useEffect(() => {
@@ -56,16 +67,6 @@ export function JobFilters() {
       (filterOptions?.matchScoreRange ? Math.floor(filterOptions.matchScoreRange.min) : 0)
     )
   }, [filters.minMatchScore, filterOptions?.matchScoreRange])
-
-  const handleFilterChange = (update: Partial<JobFiltersType>) => {
-    const newFilters = { ...filters, ...update }
-    // If matchProfile is disabled, clear match-related filters
-    if (update.hasOwnProperty('matchProfile') && !update.matchProfile) {
-      newFilters.minMatchScore = undefined
-      newFilters.cluster = undefined
-    }
-    onFiltersChange(newFilters)
-  }
 
   const handleReset = () => {
     setSearchQuery('')

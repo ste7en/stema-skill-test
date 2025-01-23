@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       success: true,
       message: 'OTP sent successfully'
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Invalid request' },
       { status: 400 }

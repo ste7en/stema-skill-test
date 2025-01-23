@@ -4,7 +4,7 @@ import { JobSeeker } from '@/types/jobseeker'
 
 export async function POST(request: Request) {
   try {
-    const { email, otp } = await request.json()
+    const { email } = await request.json()
     
     // Find the user
     const jobseeker = (jobseekers as JobSeeker[]).find(
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     })
 
     return response
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Invalid request' },
       { status: 400 }
