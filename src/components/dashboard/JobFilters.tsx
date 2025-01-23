@@ -15,11 +15,47 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon, ResetIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { useJobFilteringSearchParams } from '@/hooks/useJobFilteringSearchParams'
+import { useDebounce } from 'use-debounce'
+import { useState, useEffect } from 'react'
 
 export function JobFilters() {
   const { data: filterOptions } = useFilters()
   const { user } = useAuthStore()
   const { filters, onFiltersChange } = useJobFilteringSearchParams()
+
+  // Local state for immediate UI feedback
+  const [searchQuery, setSearchQuery] = useState(filters.searchQuery || '')
+  const [minMatchScore, setMinMatchScore] = useState(
+    filters.minMatchScore || 
+    (filterOptions?.matchScoreRange ? Math.floor(filterOptions.matchScoreRange.min) : 0)
+  )
+
+  // Debounced values
+  const [debouncedSearch] = useDebounce(searchQuery, 300)
+  const [debouncedMatchScore] = useDebounce(minMatchScore, 300)
+
+  // Update filters when debounced values change
+  useEffect(() => {
+    handleFilterChange({ searchQuery: debouncedSearch || undefined })
+  }, [debouncedSearch])
+
+  useEffect(() => {
+    if (filters.matchProfile) {
+      handleFilterChange({ minMatchScore: debouncedMatchScore })
+    }
+  }, [debouncedMatchScore])
+
+  // Update local state when filters change externally
+  useEffect(() => {
+    setSearchQuery(filters.searchQuery || '')
+  }, [filters.searchQuery])
+
+  useEffect(() => {
+    setMinMatchScore(
+      filters.minMatchScore || 
+      (filterOptions?.matchScoreRange ? Math.floor(filterOptions.matchScoreRange.min) : 0)
+    )
+  }, [filters.minMatchScore, filterOptions?.matchScoreRange])
 
   const handleFilterChange = (update: Partial<JobFiltersType>) => {
     const newFilters = { ...filters, ...update }
@@ -32,6 +68,8 @@ export function JobFilters() {
   }
 
   const handleReset = () => {
+    setSearchQuery('')
+    setMinMatchScore(filterOptions?.matchScoreRange ? Math.floor(filterOptions.matchScoreRange.min) : 0)
     onFiltersChange({})
   }
 
@@ -64,8 +102,8 @@ export function JobFilters() {
           <Input
             id="search"
             placeholder="Search jobs..."
-            value={filters.searchQuery || ''}
-            onChange={(e) => handleFilterChange({ searchQuery: e.target.value })}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
@@ -125,11 +163,11 @@ export function JobFilters() {
                   min={Math.floor(filterOptions.matchScoreRange.min)}
                   max={Math.ceil(filterOptions.matchScoreRange.max)}
                   step={1}
-                  value={[filters.minMatchScore || filterOptions.matchScoreRange.min]}
-                  onValueChange={([value]) => handleFilterChange({ minMatchScore: value })}
+                  value={[minMatchScore]}
+                  onValueChange={([value]) => setMinMatchScore(value)}
                 />
                 <div className="text-sm text-muted-foreground text-center">
-                  {filters.minMatchScore || Math.floor(filterOptions.matchScoreRange.min)}%
+                  {minMatchScore}%
                 </div>
               </div>
             )}
@@ -146,7 +184,6 @@ export function JobFilters() {
                       handleFilterChange({ cluster: value || undefined })
                     }
                   }}
-
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select cluster" />
