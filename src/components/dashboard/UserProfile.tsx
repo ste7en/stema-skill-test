@@ -3,8 +3,11 @@
 import { useAuthStore } from '@/store/useAuthStore'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '../ui/button'
+import { useLogout } from '@/hooks/useLogout'
 
 export function UserProfile() {
+  const logout = useLogout()
   const { user } = useAuthStore()
 
   if (!user) return null
@@ -18,11 +21,16 @@ export function UserProfile() {
               {user.first_name?.[0]}{user.last_name?.[0]}
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className='flex-1'>
             <h2 className="text-2xl font-bold">
               {user.first_name} {user.last_name}
             </h2>
             <p className="text-muted-foreground">{user.job_title || 'No job title'}</p>
+          </div>
+          <div className="items-center space-x-2">
+            <Button variant="secondary" onClick={logout}>
+              Logout
+            </Button>
           </div>
         </div>
       </CardHeader>
