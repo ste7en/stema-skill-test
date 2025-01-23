@@ -33,7 +33,7 @@ export function JobCard({ job }: JobCardProps) {
             )}
           </div>
           <Button 
-            variant="secondary" 
+            variant="default" 
             onClick={() => window.open(job.apply_url || job.platform_url, '_blank')}
           >
             Apply Now
