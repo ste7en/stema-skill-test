@@ -8,14 +8,18 @@ export default function DashboardPage() {
   return (
     <div className="container py-6">
       <div className="grid grid-cols-12 gap-6">
-        {/* Left Column: User Profile and Filters */}
-        <div className="col-span-12 lg:col-span-4 space-y-6">
-          <UserProfile />
-          <JobFilters />
+        {/* Left Column: User Profile and Filters (Sticky) */}
+        <div className="col-span-12 lg:col-span-4">
+          <div className="space-y-6 lg:sticky lg:top-6">
+            <UserProfile />
+            <JobFilters />
+          </div>
         </div>
-        {/* Right Column: Jobs List */}
+        {/* Right Column: Jobs List (Scrollable) */}
         <div className="col-span-12 lg:col-span-8">
-          <JobList />
+          <div className="relative min-h-[calc(100vh-3rem)]">
+            <JobList />
+          </div>
         </div>
       </div>
     </div>
